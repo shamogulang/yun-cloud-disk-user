@@ -19,3 +19,9 @@ jwt:
 feign:
   hystrix:
     enabled: false
+
+disk:
+  init: http://localhost:8080
+
+space:
+  create: http://localhost:8082

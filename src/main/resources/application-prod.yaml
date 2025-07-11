@@ -1,0 +1,27 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:mysql://217.60.249.94:3306/personal_cloud?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: personal
+    password: 12345678
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.cloudiskuser.model
+
+jwt:
+  secret: your_jwt_secret_key
+  expiration: 86400000
+
+feign:
+  hystrix:
+    enabled: false
+
+disk:
+  init: http://45.154.2.158:8080
+
+space:
+  create: http://45.154.2.158:8082
