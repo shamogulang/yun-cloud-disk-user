@@ -3,11 +3,11 @@ package com.example.cloudiskuser.service.impl;
 import com.example.cloudiskuser.feign.DiskFeign;
 import com.example.cloudiskuser.feign.SpaceFeign;
 import com.example.cloudiskuser.mapper.UserMapper;
-import com.example.cloudiskuser.model.LoginResp;
-import com.example.cloudiskuser.model.User;
+import com.example.cloudiskuser.model.*;
 import com.example.cloudiskuser.service.UserService;
 import com.example.cloudiskuser.util.JwtUtil;
 import com.example.cloudiskuser.util.PasswordUtil;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -62,4 +62,36 @@ public class UserServiceImpl implements UserService {
     public void logout(String token) {
         // JWT无状态，前端删除token即可
     }
-} 
+
+    @Override
+    public UserDto getUser(Long userId) {
+        User user = userMapper.selectById(userId);
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
+        userDto.setEmail(user.getEmail());
+        userDto.setPhone(user.getPhone());
+        return userDto;
+    }
+
+    @Override
+    public AuthResponse auth(AuthRequest request) {
+        AuthResponse resp = new AuthResponse();
+        try {
+            String token = request.getToken();
+            if (token != null && token.startsWith("Bearer ")) {
+                token = token.substring(7);
+            }
+            Claims claims = jwtUtil.getClaimsFromToken(token);
+            resp.setValid(true);
+            resp.setUserId(Long.valueOf(claims.getSubject()));
+            resp.setUsername((String) claims.get("username"));
+            resp.setMessage("token有效");
+            return resp;
+        } catch (Exception e) {
+            resp.setValid(false);
+            resp.setMessage("token无效或已过期");
+            return resp;
+        }
+    }
+}

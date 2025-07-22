@@ -20,6 +20,9 @@
     <select id="selectByPhone" resultMap="BaseResultMap">
         SELECT * FROM user WHERE phone = #{phone}
     </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
     <insert id="insertUser" parameterType="com.example.cloudiskuser.model.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user (username, email, phone, password, create_time, update_time)
         VALUES (#{username}, #{email}, #{phone}, #{password}, #{createTime}, #{updateTime})

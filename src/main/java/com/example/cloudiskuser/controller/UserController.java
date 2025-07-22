@@ -1,11 +1,6 @@
 package com.example.cloudiskuser.controller;
 
-import com.example.cloudiskuser.model.AuthRequest;
-import com.example.cloudiskuser.model.AuthResponse;
-import com.example.cloudiskuser.model.LoginRequest;
-import com.example.cloudiskuser.model.LoginResp;
-import com.example.cloudiskuser.model.Result;
-import com.example.cloudiskuser.model.User;
+import com.example.cloudiskuser.model.*;
 import com.example.cloudiskuser.service.UserService;
 import com.example.cloudiskuser.util.JwtUtil;
 import lombok.Data;
@@ -47,30 +42,21 @@ public class UserController {
         public LogoutResp(String message) { this.message = message; }
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public Result<LogoutResp> logout(@RequestHeader("Authorization") String token) {
         userService.logout(token);
         return Result.success(new LogoutResp("登出成功"));
     }
 
+    @GetMapping("/{userId}")
+    public Result<UserDto> getUserInfo(@PathVariable("userId") Long userId) {
+
+        return Result.success(userService.getUser(userId));
+    }
+
+
     @PostMapping("/auth")
     public Result<AuthResponse> auth(@RequestBody AuthRequest request) {
-        AuthResponse resp = new AuthResponse();
-        try {
-            String token = request.getToken();
-            if (token != null && token.startsWith("Bearer ")) {
-                token = token.substring(7);
-            }
-            Claims claims = jwtUtil.getClaimsFromToken(token);
-            resp.setValid(true);
-            resp.setUserId(Long.valueOf(claims.getSubject()));
-            resp.setUsername((String) claims.get("username"));
-            resp.setMessage("token有效");
-            return Result.success(resp);
-        } catch (Exception e) {
-            resp.setValid(false);
-            resp.setMessage("token无效或已过期");
-            return Result.success(resp);
-        }
+          return Result.success(userService.auth(request));
     }
 } 

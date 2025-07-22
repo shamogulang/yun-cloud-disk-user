@@ -25,3 +25,13 @@ disk:
 
 space:
   create: http://localhost:8082
+
+third:
+  auth:
+    secret: 12345678
+
+auth:
+  whitelist:
+    - /error
+    - /user/register
+    - /user/login

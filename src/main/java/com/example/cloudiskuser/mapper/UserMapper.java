@@ -9,5 +9,6 @@ public interface UserMapper {
     User selectByUsername(@Param("username") String username);
     User selectByEmail(@Param("email") String email);
     User selectByPhone(@Param("phone") String phone);
+    User selectById(@Param("id") Long  id);
     int insertUser(User user);
 } 
